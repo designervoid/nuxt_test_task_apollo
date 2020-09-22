@@ -24,6 +24,8 @@
           placeholder: 'Enter last name',
         },
       ]"
+      @getData="getUserDetails"
+      @saveData="saveUserDetails"
     />
   </div>
 </template>
@@ -31,7 +33,7 @@
 <script>
 import ValidationComponent from "@/components/ValidationComponent"
 import { required } from "vuelidate/lib/validators"
-import { mapState, mapMutations } from "vuex"
+import { mapState, mapActions, mapMutations } from "vuex"
 
 export default {
   name: "User",
@@ -49,6 +51,7 @@ export default {
     ...mapState("user", ["editable"]),
   },
   methods: {
+    ...mapActions("user", ["getUserDetails", "saveUserDetails"]),
     ...mapMutations("user", ["SET_EDITABLE_STATE"]),
   },
   beforeRouteLeave(to, from, next) {

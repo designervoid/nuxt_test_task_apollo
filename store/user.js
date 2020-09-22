@@ -1,3 +1,6 @@
+import http from "@/helpers/http"
+import { SET_USER_DETAILS, SET_EDITABLE_STATE } from "./mutation-types"
+
 const state = () => ({
   userDetails: {
     name: "",
@@ -8,13 +11,22 @@ const state = () => ({
 
 const getters = {}
 
-const actions = {}
+const actions = {
+  getUserDetails({ commit }) {
+    let response = http.get("/api/user")
+    commit(SET_USER_DETAILS, response)
+  },
+  saveUserDetails({ commit }, payload) {
+    http.post("/api/user", payload)
+    commit(SET_USER_DETAILS, payload)
+  },
+}
 
 const mutations = {
-  SET_USER_DETAILS(state, payload) {
+  [SET_USER_DETAILS](state, payload) {
     state.userDetails = payload
   },
-  SET_EDITABLE_STATE(state, payload) {
+  [SET_EDITABLE_STATE](state, payload) {
     state.editable = payload
   },
 }

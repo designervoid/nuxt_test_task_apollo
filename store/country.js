@@ -1,3 +1,6 @@
+import http from "@/helpers/http"
+import { SET_COUNTRY_DETAILS, SET_EDITABLE_STATE } from "./mutation-types"
+
 const state = () => ({
   countryDetails: {
     country: "",
@@ -7,13 +10,22 @@ const state = () => ({
 
 const getters = {}
 
-const actions = {}
+const actions = {
+  getCountryDetails({ commit }) {
+    let response = http.get("/api/country")
+    commit(SET_COUNTRY_DETAILS, response)
+  },
+  saveCountryDetails({ commit }, payload) {
+    http.post("/api/country", payload)
+    commit(SET_COUNTRY_DETAILS, payload)
+  },
+}
 
 const mutations = {
-  SET_COUNTRY_DETAILS(state, payload) {
+  [SET_COUNTRY_DETAILS](state, payload) {
     state.countryDetails = payload
   },
-  SET_EDITABLE_STATE(state, payload) {
+  [SET_EDITABLE_STATE](state, payload) {
     state.editable = payload
   },
 }

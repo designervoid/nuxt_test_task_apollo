@@ -1,7 +1,7 @@
 <template>
   <div class="page">
     Добро пожаловать в тестовый ЛК
-    {{ user }}
+    {{ userDetails }}
   </div>
 </template>
 
@@ -10,7 +10,7 @@ import { mapState } from "vuex"
 export default {
   name: "HomePage",
   computed: {
-    ...mapState("user", ["user"]),
+    ...mapState("user", ["userDetails"]),
   },
 }
 </script>

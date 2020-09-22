@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex"
+import { mapState, mapActions, mapMutations } from "vuex"
 
 export default {
   name: "ValidationComponent",
@@ -109,9 +109,11 @@ export default {
         return state[this.vuexModule].editable
       },
     }),
-    // если одно поле невалидное - возвращаем false, далее чтобы срабатывал эффект disable ставим знак логического отрицания
-    // допустим, let isFieldsValid = true (все поля валидны, значит кнопка должна быть активна) --> !isFieldsValid
-    // иначе, let isFieldsValid = false (какое-то поле невалидно, значит кнопка должна быть неактивна) --> !isFieldsValid
+    /*
+     ** Если одно поле невалидное - возвращаем false, далее чтобы срабатывал эффект disable ставим знак логического отрицания
+     ** Допустим, let isFieldsValid = true (все поля валидны, значит кнопка должна быть активна) --> !isFieldsValid
+     ** Иначе, let isFieldsValid = false (какое-то поле невалидно, значит кнопка должна быть неактивна) --> !isFieldsValid
+     */
     isDisabledSaveButton() {
       let arrayOfValues = Object.keys(this.form).map((e) =>
         this.validateField(e)
@@ -123,14 +125,14 @@ export default {
     },
   },
   watch: {
-    /* 
-        После того, как наш асинхронный action изменил объект userDetails, мы обновляем данные из поля data в нашел компоненте.
-        На каждой итерации мы выполняем следующие действия:
-        1) устанавливаем актуальное значение в поле data
-        2) программно делаем фокус на инпут
-        3) программно делаем блюр на инпут
-        Если не делать шаг номер 2 и 3, тогда при нажатии кнопки "Edit" не будет видно валидации полей
-      */
+    /*
+     **  После того, как наш асинхронный action изменил объект userDetails, мы обновляем данные из поля data в нашел компоненте.
+     **  На каждой итерации мы выполняем следующие действия:
+     **  1) устанавливаем актуальное значение в поле data
+     **  2) программно делаем фокус на инпут
+     **  3) программно делаем блюр на инпут
+     **  Если не делать шаг номер 2 и 3, тогда при нажатии кнопки "Edit" не будет видно валидации полей
+     */
     watchingState(newValue) {
       for (let [key, value] of Object.entries(newValue)) {
         this.setField(key, value)
@@ -140,8 +142,7 @@ export default {
     },
   },
   created() {
-    // need make prop for action
-    // $emit('callback')
+    this.$emit("getData")
   },
   methods: {
     ...mapMutations({
@@ -150,21 +151,21 @@ export default {
       },
     }),
     /*
-        Установка значений из модуля @/store/user.js
-      */
+     ** Установка значений из модуля `@/store/user.js`
+     */
     setField(key, value) {
       this.form[key] = value
     },
     /*
-        При фокусе на инпут не показываем пользователю валидации
-      */
+     ** При фокусе на инпут не показываем пользователю валидации
+     */
     onFocusField(key) {
       this.focus[key] = true
       this.blur[key] = null
     },
     /*
-        При блюре с инпута показываем прошла валидация или нет
-      */
+     ** При блюре с инпута показываем прошла валидация или нет
+     */
     onBlurField(key) {
       if (!this.$v.form[key].$invalid) {
         this.focus[key] = false
@@ -174,52 +175,54 @@ export default {
         this.blur[key] = false
       }
     },
+    /*
+     ** Если нет режима редактирования - игнорируем все валидации
+     ** Иначе если блюр эффект сработал и поле валидное, тогда возвращаем true
+     */
     validateField(key) {
       if (!this.editableState) {
-        // если нет режима редактирования - игнорируем все валидации
         return null
       } else {
-        // иначе если блюр эффект сработал и поле валидное, тогда возвращаем true
         return this.blur[key] && !this.$v.form[key].$invalid
       }
     },
     /*
-        Первым параметром указываем объект в поле data
-        Вторым параметром указываем значение, которое мы хотим присвоить всем полям объекта
-      */
+     ** Первым параметром указываем объект в поле data
+     ** Вторым параметром указываем значение, которое мы хотим присвоить всем полям объекта
+     */
     parseObject(object, value) {
       for (let element in object) {
         object[element] = value
       }
     },
     /*
-        Сбрасываем до начального состояния все поля из объектов this.blur и this.focus
-      */
-    refreshData() {
+     ** Сбрасываем до начального состояния все поля из объектов this.blur и this.focus
+     */
+    refreshUserActions() {
       this.parseObject(this.blur, null)
       this.parseObject(this.focus, false)
     },
     /*
-        Отмена редактирования
-      */
+     **  Отмена редактирования
+     */
     cancelEdit() {
       this.SET_EDITABLE_STATE(false)
-      // this.getUserDetails();
-      this.refreshData()
+      this.$emit("getData")
+      this.refreshUserActions()
     },
     /*
-        Начало редактирования
-      */
+     ** Начало редактирования
+     */
     startEdit() {
       this.SET_EDITABLE_STATE(true)
     },
     /*
-        Сохранить пользовательские данные
-      */
+     ** Сохранить пользовательские данные
+     */
     saveUserDetails() {
       this.SET_EDITABLE_STATE(false)
-      // this.changeUserDetails(payload);
-      this.refreshData()
+      this.$emit("saveData", { ...this.form })
+      this.refreshUserActions()
     },
   },
 }

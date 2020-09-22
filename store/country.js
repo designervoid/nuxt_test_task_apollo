@@ -1,12 +1,12 @@
-const state = () => ({});
+const state = () => ({})
 
-const getters = {};
+const getters = {}
 
-const actions = {};
+const actions = {}
 
-const mutations = {};
+const mutations = {}
 
-const modules = {};
+const modules = {}
 
 export default {
   state,
@@ -14,4 +14,4 @@ export default {
   actions,
   mutations,
   modules,
-};
+}

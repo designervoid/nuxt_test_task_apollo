@@ -1,21 +1,21 @@
 const state = () => ({
-    userDetails: {
-      name: '',
-      lastName: ''
-    }
-});
+  userDetails: {
+    name: "",
+    lastName: "",
+  },
+})
 
-const getters = {};
+const getters = {}
 
-const actions = {};
+const actions = {}
 
 const mutations = {
   SET_USER_DETAILS(state, payload) {
     state.userDetails = payload
   },
-};
+}
 
-const modules = {};
+const modules = {}
 
 export default {
   namespaced: true,
@@ -24,4 +24,4 @@ export default {
   actions,
   mutations,
   modules,
-};
+}

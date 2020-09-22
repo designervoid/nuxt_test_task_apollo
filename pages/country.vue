@@ -1,23 +1,42 @@
 <template>
-  <div class="app">
-    <b-form-group  label="Your Country:" >
-      <b-form-input
-        v-model="country"
-        required
-        placeholder="Enter country"
-      ></b-form-input>
-    </b-form-group>
-    <b-btn variant="primary">Save</b-btn>
+  <div>
+    <validationComponent
+      vuex-module="user"
+      vuex-state="userDetails"
+      :form-fields="{ country: '' }"
+      :focus-fields="{ country: false }"
+      :blur-fields="{ country: null }"
+      :validation-fields="{
+        form: {
+          country: { required: validateHelpers.required },
+        },
+      }"
+      :inputs-meta="[
+        {
+          label: 'Your Country:',
+          key: 'country',
+          placeholder: 'Enter country',
+        }
+      ]"
+    />
   </div>
 </template>
 
 <script>
-  export default {
-    name: 'PagePrifile',
-    data(){
-      return {
-        country: 'USA'
-      }
+import validationComponent from "@/components/validationComponent"
+import { required } from "vuelidate/lib/validators"
+
+export default {
+  name: "Test",
+  components: {
+    validationComponent,
+  },
+  data() {
+    return {
+      validateHelpers: {
+        required: required,
+      },
     }
-  }
+  },
+}
 </script>

@@ -22,7 +22,7 @@
           label: 'Your Last Name:',
           key: 'lastName',
           placeholder: 'Enter last name',
-        }
+        },
       ]"
     />
   </div>
@@ -31,7 +31,7 @@
 <script>
 import ValidationComponent from "@/components/ValidationComponent"
 import { required } from "vuelidate/lib/validators"
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations } from "vuex"
 
 export default {
   name: "User",
@@ -46,10 +46,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('user', ['editable'])
+    ...mapState("user", ["editable"]),
   },
   methods: {
-    ...mapMutations('user', ['SET_EDITABLE_STATE']),
+    ...mapMutations("user", ["SET_EDITABLE_STATE"]),
   },
   beforeRouteLeave(to, from, next) {
     if (this.editable) {

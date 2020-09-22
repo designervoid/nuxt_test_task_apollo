@@ -16,7 +16,7 @@
           label: 'Your Country:',
           key: 'country',
           placeholder: 'Enter country',
-        }
+        },
       ]"
     />
   </div>
@@ -25,7 +25,7 @@
 <script>
 import ValidationComponent from "@/components/ValidationComponent"
 import { required } from "vuelidate/lib/validators"
-import { mapState, mapMutations } from 'vuex'
+import { mapState, mapMutations } from "vuex"
 
 export default {
   name: "Country",
@@ -40,10 +40,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('country', ['editable'])
+    ...mapState("country", ["editable"]),
   },
   methods: {
-    ...mapMutations('country', ['SET_EDITABLE_STATE']),
+    ...mapMutations("country", ["SET_EDITABLE_STATE"]),
   },
   beforeRouteLeave(to, from, next) {
     if (this.editable) {

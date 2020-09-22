@@ -13,7 +13,9 @@
         @focus="onFocusField(input.key)"
         @blur="onBlurField(input.key)"
       />
-      <div v-if="!focus[input.key] && blur[input.key] !== null && editableState">
+      <div
+        v-if="!focus[input.key] && blur[input.key] !== null && editableState"
+      >
         <div v-if="!$v.form[input.key].required" class="error-validation">
           * - required to fill input
         </div>
@@ -105,7 +107,7 @@ export default {
       },
       editableState(state) {
         return state[this.vuexModule].editable
-      }
+      },
     }),
     // если одно поле невалидное - возвращаем false, далее чтобы срабатывал эффект disable ставим знак логического отрицания
     // допустим, let isFieldsValid = true (все поля валидны, значит кнопка должна быть активна) --> !isFieldsValid
@@ -143,7 +145,9 @@ export default {
   },
   methods: {
     ...mapMutations({
-      SET_EDITABLE_STATE(commit, payload) { commit(`${this.vuexModule}/SET_EDITABLE_STATE`, payload) }
+      SET_EDITABLE_STATE(commit, payload) {
+        commit(`${this.vuexModule}/SET_EDITABLE_STATE`, payload)
+      },
     }),
     /*
         Установка значений из модуля @/store/user.js
@@ -199,7 +203,7 @@ export default {
         Отмена редактирования
       */
     cancelEdit() {
-      this.SET_EDITABLE_STATE(false);
+      this.SET_EDITABLE_STATE(false)
       // this.getUserDetails();
       this.refreshData()
     },
@@ -207,13 +211,13 @@ export default {
         Начало редактирования
       */
     startEdit() {
-      this.SET_EDITABLE_STATE(true);
+      this.SET_EDITABLE_STATE(true)
     },
     /*
         Сохранить пользовательские данные
       */
     saveUserDetails() {
-      this.SET_EDITABLE_STATE(false);
+      this.SET_EDITABLE_STATE(false)
       // this.changeUserDetails(payload);
       this.refreshData()
     },

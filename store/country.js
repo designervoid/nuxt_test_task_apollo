@@ -1,8 +1,8 @@
 const state = () => ({
   countryDetails: {
-    country: ''
+    country: "",
   },
-  editable: false
+  editable: false,
 })
 
 const getters = {}
@@ -14,8 +14,8 @@ const mutations = {
     state.countryDetails = payload
   },
   SET_EDITABLE_STATE(state, payload) {
-    state.editable = payload;
-  }
+    state.editable = payload
+  },
 }
 
 const modules = {}

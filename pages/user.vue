@@ -1,6 +1,6 @@
 <template>
   <div>
-    <validationComponent
+    <ValidationComponent
       vuex-module="user"
       vuex-state="userDetails"
       :form-fields="{ name: '', lastName: '' }"
@@ -29,19 +29,40 @@
 </template>
 
 <script>
-import validationComponent from "@/components/validationComponent"
+import ValidationComponent from "@/components/ValidationComponent"
 import { required } from "vuelidate/lib/validators"
+import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: "Test",
+  name: "User",
   components: {
-    validationComponent,
+    ValidationComponent,
   },
   data() {
     return {
       validateHelpers: {
         required: required,
       },
+    }
+  },
+  computed: {
+    ...mapState('user', ['editable'])
+  },
+  methods: {
+    ...mapMutations('user', ['SET_EDITABLE_STATE']),
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.editable) {
+      // если пользователь подтверждает переход, тогда позволяем ему перейти на другую страницу
+      let agreement = confirm(
+        "Data from this page will not save. Are you sure you want to leave this page?"
+      )
+      if (agreement) {
+        this.SET_EDITABLE_STATE(false)
+        next()
+      }
+    } else {
+      next()
     }
   },
 }

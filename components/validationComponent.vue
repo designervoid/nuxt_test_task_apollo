@@ -9,17 +9,17 @@
         v-model="$v.form[input.key].$model"
         :placeholder="input.placeholder"
         :state="validateField(input.key)"
-        :disabled="!editable"
+        :disabled="!editableState"
         @focus="onFocusField(input.key)"
         @blur="onBlurField(input.key)"
       />
-      <div v-if="!focus[input.key] && blur[input.key] !== null && editable">
-        <div v-if="!$v.form[input.key].required" class="is-required-validation">
+      <div v-if="!focus[input.key] && blur[input.key] !== null && editableState">
+        <div v-if="!$v.form[input.key].required" class="error-validation">
           * - required to fill input
         </div>
       </div>
     </b-form-group>
-    <div v-if="!editable">
+    <div v-if="!editableState">
       <b-btn variant="primary" @click="startEdit()"> Edit </b-btn>
     </div>
     <div v-else>
@@ -36,11 +36,10 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
-import { required } from "vuelidate/lib/validators"
+import { mapState, mapMutations } from "vuex"
 
 export default {
-  name: "PageUser",
+  name: "ValidationComponent",
   props: {
     vuexModule: {
       type: String,
@@ -92,7 +91,6 @@ export default {
       blur: {
         ...this.blurFields,
       },
-      editable: false,
     }
   },
   validations() {
@@ -105,6 +103,9 @@ export default {
       watchingState(state) {
         return state[this.vuexModule][this.vuexState]
       },
+      editableState(state) {
+        return state[this.vuexModule].editable
+      }
     }),
     // если одно поле невалидное - возвращаем false, далее чтобы срабатывал эффект disable ставим знак логического отрицания
     // допустим, let isFieldsValid = true (все поля валидны, значит кнопка должна быть активна) --> !isFieldsValid
@@ -115,7 +116,7 @@ export default {
       ) // [true, true, true, false, null] for example
       let isFieldsInvalid =
         (arrayOfValues.includes(null) || arrayOfValues.includes(false)) &&
-        this.editable
+        this.editableState
       return isFieldsInvalid
     },
   },
@@ -141,6 +142,9 @@ export default {
     // $emit('callback')
   },
   methods: {
+    ...mapMutations({
+      SET_EDITABLE_STATE(commit, payload) { commit(`${this.vuexModule}/SET_EDITABLE_STATE`, payload) }
+    }),
     /*
         Установка значений из модуля @/store/user.js
       */
@@ -167,7 +171,7 @@ export default {
       }
     },
     validateField(key) {
-      if (!this.editable) {
+      if (!this.editableState) {
         // если нет режима редактирования - игнорируем все валидации
         return null
       } else {
@@ -195,7 +199,7 @@ export default {
         Отмена редактирования
       */
     cancelEdit() {
-      this.editable = false
+      this.SET_EDITABLE_STATE(false);
       // this.getUserDetails();
       this.refreshData()
     },
@@ -203,38 +207,22 @@ export default {
         Начало редактирования
       */
     startEdit() {
-      this.editable = true
+      this.SET_EDITABLE_STATE(true);
     },
     /*
         Сохранить пользовательские данные
       */
     saveUserDetails() {
-      this.editable = false
+      this.SET_EDITABLE_STATE(false);
       // this.changeUserDetails(payload);
       this.refreshData()
     },
-    /*
-        Передать информацию родителю о состоянии режима редактирования 
-      */
-  },
-  beforeRouteLeave(to, from, next) {
-    if (this.editable) {
-      // если пользователь подтверждает переход, тогда позволяем ему перейти на другую страницу
-      let agreement = confirm(
-        "Data from this page will not save. Are you sure you want to leave this page?"
-      )
-      if (agreement) {
-        next()
-      }
-    } else {
-      next()
-    }
   },
 }
 </script>
 
 <style lang="css">
-.is-required-validation {
+.error-validation {
   color: #dc3545;
 }
 </style>

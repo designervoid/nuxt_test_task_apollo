@@ -3,6 +3,7 @@ const state = () => ({
     name: "",
     lastName: "",
   },
+  editable: false
 })
 
 const getters = {}
@@ -13,6 +14,9 @@ const mutations = {
   SET_USER_DETAILS(state, payload) {
     state.userDetails = payload
   },
+  SET_EDITABLE_STATE(state, payload) {
+    state.editable = payload
+  }
 }
 
 const modules = {}

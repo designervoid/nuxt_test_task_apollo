@@ -1,8 +1,8 @@
 <template>
   <div>
-    <validationComponent
-      vuex-module="user"
-      vuex-state="userDetails"
+    <ValidationComponent
+      vuex-module="country"
+      vuex-state="countryDetails"
       :form-fields="{ country: '' }"
       :focus-fields="{ country: false }"
       :blur-fields="{ country: null }"
@@ -23,19 +23,40 @@
 </template>
 
 <script>
-import validationComponent from "@/components/validationComponent"
+import ValidationComponent from "@/components/ValidationComponent"
 import { required } from "vuelidate/lib/validators"
+import { mapState, mapMutations } from 'vuex'
 
 export default {
-  name: "Test",
+  name: "Country",
   components: {
-    validationComponent,
+    ValidationComponent,
   },
   data() {
     return {
       validateHelpers: {
         required: required,
       },
+    }
+  },
+  computed: {
+    ...mapState('country', ['editable'])
+  },
+  methods: {
+    ...mapMutations('country', ['SET_EDITABLE_STATE']),
+  },
+  beforeRouteLeave(to, from, next) {
+    if (this.editable) {
+      // если пользователь подтверждает переход, тогда позволяем ему перейти на другую страницу
+      let agreement = confirm(
+        "Data from this page will not save. Are you sure you want to leave this page?"
+      )
+      if (agreement) {
+        this.SET_EDITABLE_STATE(false)
+        next()
+      }
+    } else {
+      next()
     }
   },
 }

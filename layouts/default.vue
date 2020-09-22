@@ -2,7 +2,7 @@
   <b-container>
     <ul class="nav nav-tabs">
       <li class="nav-item">
-        <router-link class="nav-link" to="/" exact>
+        <router-link class="nav-link" to="/">
 Home
 </router-link>
       </li>

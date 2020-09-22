@@ -12,8 +12,9 @@ const getters = {}
 
 const actions = {
   getCountryDetails({ commit }) {
+    // по какой-то причине с моканной базы прилетает { __ob__: Observer }, здесь надо обрабатывать такую конструкцию spread оператором, чтобы все работало
     let response = http.get("/api/country")
-    commit(SET_COUNTRY_DETAILS, response)
+    commit(SET_COUNTRY_DETAILS, { ...response })
   },
   saveCountryDetails({ commit }, payload) {
     http.post("/api/country", payload)

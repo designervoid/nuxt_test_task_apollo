@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { mapState, mapActions, mapMutations } from "vuex"
+import { mapState, mapMutations } from "vuex"
 
 export default {
   name: "ValidationComponent",
@@ -134,11 +134,7 @@ export default {
      **  Если не делать шаг номер 2 и 3, тогда при нажатии кнопки "Edit" не будет видно валидации полей
      */
     watchingState(newValue) {
-      for (let [key, value] of Object.entries(newValue)) {
-        this.setField(key, value)
-        this.onFocusField(key)
-        this.onBlurField(key)
-      }
+      this.fillInputs(newValue)
     },
   },
   created() {
@@ -224,6 +220,13 @@ export default {
       this.$emit("saveData", { ...this.form })
       this.refreshUserActions()
     },
+    fillInputs(value) {
+      for (let [key, value] of Object.entries(value)) {
+        this.setField(key, value)
+        this.onFocusField(key)
+        this.onBlurField(key)
+      }
+    }
   },
 }
 </script>

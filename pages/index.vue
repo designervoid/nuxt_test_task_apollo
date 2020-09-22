@@ -6,11 +6,17 @@
 </template>
 
 <script>
-import { mapState } from "vuex"
+import { mapState, mapActions } from "vuex"
 export default {
   name: "HomePage",
   computed: {
     ...mapState("user", ["userDetails"]),
   },
+  created() {
+    this.getUserDetails();
+  },
+  methods: {
+    ...mapActions("user", ["getUserDetails"]),
+  }
 }
 </script>

@@ -220,6 +220,9 @@ export default {
       this.$emit("saveData", { ...this.form })
       this.refreshUserActions()
     },
+    /*
+     ** Заполнение полей программным способом
+     */
     fillInputs(value) {
       for (let [key, value] of Object.entries(value)) {
         this.setField(key, value)
